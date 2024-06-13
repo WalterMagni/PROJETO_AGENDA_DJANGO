@@ -6,6 +6,7 @@ python -m venv venv
 pip install django
 django-admin startproject project .
 
+python manage.py startapp contact
 python manage.py runserver
 
 ```
@@ -17,5 +18,5 @@ git config --global user.email 'waltermagni@terra.com.br'
 git config --global init.defaultBranch main
 git init
 git add . 
-git commit - m 'primeiro commit' 
+git commit - m  
 ```
