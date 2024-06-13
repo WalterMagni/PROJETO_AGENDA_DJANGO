@@ -22,6 +22,10 @@ git commit - m
 ```
 
 ```
+python manage.py makemigrations
+python manage.py migrate
+
+```
 Criando e modificando a senha de um super usuario Django
 
 ```
