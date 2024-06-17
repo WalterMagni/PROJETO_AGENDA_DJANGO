@@ -4,7 +4,7 @@
 
     <H2>Criar Contato</H2>
 
-    <form action="{% url 'contact:create' %}" method="POST" enctype="multipart/form-data"> 
+    <form action="{{ form_action }}" method="POST" enctype="multipart/form-data"> 
         {% csrf_token %}
 
         <div class="form-content">
