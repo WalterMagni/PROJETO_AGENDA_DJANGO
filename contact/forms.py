@@ -1,68 +1,27 @@
 from django.shortcuts import render
 from contact.models import Contact
 from django.core.exceptions import ValidationError
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 from contact.models import Contact
 from django import forms
 from . import models
 
 class ContactForm(forms.ModelForm):
 
-  first_name = forms.CharField(
-    widget=forms.TextInput(
+  picture = forms.ImageField(
+    widget=forms.FileInput(
       attrs={
-        'class': 'classe-a classe-b',
-        'placeholder': 'Primeiro nome',
+        'accept': 'image/*',
       }
-    ),
-    label='Primeiro Nome',
-    help_text='Primeiro nome do contato', 
+    )
   )
-
-  last_name = forms.CharField(
-    widget=forms.TextInput(
-      attrs={
-        'class': 'classe-a classe-b',
-        'placeholder': 'Sobrenome',
-      }
-    ),
-    label='Sobrenome',
-    help_text='Sobrenome do contato', 
-  )
-
-  phone = forms.CharField(
-    widget=forms.TextInput(
-      attrs={
-        'class': 'classe-a classe-b',
-        'placeholder': 'Telefone',
-      }
-    ),
-    label='Telefone',
-    help_text='Telefone do contato', 
-  )
-
-  email = forms.EmailField(
-    widget=forms.TextInput(
-      attrs={
-        'class': 'classe-a classe-b',
-        'placeholder': 'E-mail',
-      }
-    ),
-    label='E-mail',
-    help_text='E-mail do contato', 
-  )
-
-  def __init__(self, *args, **kwargs):
-    super().__init__(*args, **kwargs)
-
-    #self.fields['first_name'].widget.attrs.update({
-    #  'class': 'classe-a classe-b',
-    #  'placeholder': 'Primeiro nome',
-    #})
 
   class Meta:
+
     model = models.Contact
     fields = (
-      'first_name', 'last_name', 'phone', 'email', 'description', 'category',
+      'first_name', 'last_name', 'phone', 'email', 'description', 'category', 'picture',
     )
 
   def clean(self):
@@ -82,24 +41,17 @@ class ContactForm(forms.ModelForm):
       self.add_error('first_name',  ValidationError('Primeiro nome inválido, tamanho inválido', code='invalid'))
     return first_name
   
+class RegisterForm(UserCreationForm):
+  first_name = forms.CharField(required=True)
 
-def create(request):
+  class Meta:
+    model = User
+    fields = ('first_name', 'last_name', 'email', 'username', 'password1', 'password2')
 
-  if request.method == 'POST':
-      context = {
-         'form': ContactForm(data=request.POST or None),
-      }
-  
-      return render(
-           request, 'contact/create.html',
-           context,
-      )
+  def clear_email(self):
+    email = self.cleaned_data.get('email')
 
-  context = {
-      'form': ContactForm()
-  }
+    if(User.objects.filter(email=email).exists()):
+      self.add_error('email',  ValidationError('Email ja existe', code='invalid'))
 
-  return render(
-      request, 'contact/create.html',
-      context,
-  )
+    return email
