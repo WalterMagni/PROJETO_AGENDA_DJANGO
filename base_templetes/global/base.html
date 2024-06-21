@@ -5,9 +5,30 @@
 </head>
 <body>
    {% include "global/partials/_header.html" %}
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="message {{ message.tags }} ">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
   <main class="content">
     {% block content %}{% endblock content %}
     {% include "global/partials/_pagination.html" %}
   </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() {
+            var messages = document.getElementById('messages');
+            if (messages) {
+                messages.style.display = 'none';
+            }
+        }, 5000);  // Change 5000 to the number of milliseconds you want the message to be visible
+    });
+  </script>
+
 </body>
 </html>

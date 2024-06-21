@@ -42,7 +42,9 @@ class ContactForm(forms.ModelForm):
     return first_name
   
 class RegisterForm(UserCreationForm):
-  first_name = forms.CharField(required=True)
+  first_name = forms.CharField(required=True, min_length=3)
+  last_name = forms.CharField(required=True, min_length=3)
+  email = forms.EmailField(required=True)
 
   class Meta:
     model = User
@@ -55,3 +57,8 @@ class RegisterForm(UserCreationForm):
       self.add_error('email',  ValidationError('Email ja existe', code='invalid'))
 
     return email
+
+class RegisterUpdateForm(forms.ModelForm):
+  class Meta:
+    model = User
+    fields = ('first_name', 'last_name', 'email')
